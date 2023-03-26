@@ -1,88 +1,67 @@
 ﻿/*
-Задача 62. Напишите программу, которая заполнит спирально массив 4 на 4.
-На входе - натуральное число от пользователя, например 4.
-Тогда на выходе получается вот такой массив:
-01 02 03 04
-12 13 14 05
-11 16 15 06
-10 09 08 07
+Задача 60. ...Сформируйте трёхмерный массив из неповторяющихся двузначных чисел.
+Напишите программу, которая будет построчно выводить массив, добавляя индексы каждого элемента.
+Массив размером 2 x 2 x 2
+66(0,0,0) 25(0,1,0)
+34(1,0,0) 41(1,1,0)
+27(0,0,1) 90(0,1,1)
+26(1,0,1) 55(1,1,1)
 */
 
-Console.WriteLine("Введите порядок квадратной матрицы:");
-int n = Convert.ToInt32(Console.ReadLine());
+Console.WriteLine("Введите количество строк:");
+int rows = Convert.ToInt32(Console.ReadLine());
+Console.WriteLine("Введите количество столбцов:");
+int cols = Convert.ToInt32(Console.ReadLine());
+Console.WriteLine("Задайте глубину трехмерного массива:");
+int depth = Convert.ToInt32(Console.ReadLine());
+int [,,] array = new int [rows, cols, depth];
+Console.WriteLine("");
 
-int [,] array = new int [n, n];
+FillArray(array);
+Console.WriteLine("Исходный массив:");
+if (array.GetLength(0)*array.GetLength(1)*array.GetLength(2) <= 90)
+    PrintArray(array);
 
-SpiralArray(n);
-PrintArray(array);
 
 
-void SpiralArray (int n)
-{
-
-int imin = 0;
-int imax = n-1;
-int jmin = 0;
-int jmax = n-1;
-
-int k = 0;
-int i = 0;
-int j = -1;
-
-for(int s=0; s<=n; s++)
+void FillArray(int[,,] array)
     {
-    while ( j<jmax)
+    int m = array.GetLength(0)*array.GetLength(1)*array.GetLength(2);
+    if (m <= 90)
         {
-        k++;
-        j++;
-        //Console.WriteLine("i:" + i);
-        //Console.WriteLine("j:" + j);
-        array[i,j] = k;
+        int n = 0;
+        //Console.WriteLine("m: " + m);
+        int [] noarray = new int [m];
+        Random rnd = new Random();
+        for (int k=0; k<array.GetLength(2);k++)
+            for (int i=0; i<array.GetLength(0);i++)
+                for (int j=0; j<array.GetLength(1);j++)
+                    {
+                    int [] ValidValues = Enumerable.Range(0, 100).Except(noarray).ToArray();
+                    int num = ValidValues[rnd.Next(9, ValidValues.Length)];
+                    array[i,j,k] = num;
+                    noarray[n] = num;
+                    //Console.WriteLine("n: " + n);
+                    //Console.WriteLine("noarray n: " + noarray[n]);
+                    n++;
+                    //Console.WriteLine("array[i,j,k]: " + array[i,j,k]);
+                    //array[i,j,k] = new Random().Next(-10,10);
+                    }
         }
-    imin++;
-
-        while (i<imax)
-        {
-        k++;
-        i++;
-        //Console.WriteLine("i2:" + i);
-        //Console.WriteLine("j2:" + j);
-        array[i,j] = k;
-        }
-        jmax--;
-
-        while (j>jmin)
-        {
-        k++;
-        j--;
-        //Console.WriteLine("i3:" + i);
-        //Console.WriteLine("j3:" + j);
-        array[i,j] = k;
-        }
-        imax--;
-
-        while (i>imin)
-        {
-        k++;
-        i--;
-        //Console.WriteLine("i4:" + i);
-        //Console.WriteLine("j4:" + j);
-        array[i,j] = k;
-        }
-    jmin++;
-    //Console.WriteLine("S:" + s);
+    else
+        Console.WriteLine("(количество столбцов) * (количество строк) * (глубина) <=90");
     }
-}
 
-
-void PrintArray(int[,] array)
+void PrintArray(int[,,] array)
     {
-    Console.WriteLine();
-    Console.WriteLine("Двумерный массив, заполненный спирально: ");
-    for (int i=0; i<array.GetLength(0);i++)
+    for (int k=0; k<array.GetLength(2);k++)
         {
-        for (int j=0; j<array.GetLength(1);j++)
-            Console.Write($"{array[i,j],2} \t");
-        Console.WriteLine();
+        Console.WriteLine("Слой: " +(k+1));
+        for (int i=0; i<array.GetLength(0);i++)
+            {
+            for (int j=0; j<array.GetLength(1);j++)
+                Console.Write($"{array[i,j,k],2} ({i},{j},{k}) \t");
+            Console.WriteLine();
+            }
         }
     }
